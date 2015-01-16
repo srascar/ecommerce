@@ -19,7 +19,7 @@ use Sonata\MediaBundle\Model\GalleryInterface;
 use Sonata\MediaBundle\Model\MediaInterface;
 use Doctrine\Common\Collections\ArrayCollection;
 use Symfony\Component\PropertyAccess\PropertyAccess;
-use Symfony\Component\Validator\ExecutionContext;
+use Symfony\Component\Validator\ExecutionContextInterface;
 
 /**
  * Sonata\ProductBundle\Entity\BaseProduct
@@ -946,14 +946,15 @@ abstract class BaseProduct implements ProductInterface
     /**
      * {@inheritdoc}
      */
-    public function validateOneMainCategory(ExecutionContext $context)
+    public function validateOneMainCategory(ExecutionContextInterface $context)
     {
         if ($this->getCategories()->count() == 0) {
             return;
         }
 
         if (!$this->hasOneMainCategory()) {
-            $context->addViolation('sonata.product.must_have_one_main_category');
+            $context->buildViolation('sonata.product.must_have_one_main_category')
+                ->addViolation();
         }
     }
 }
